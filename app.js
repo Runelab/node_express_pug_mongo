@@ -16,12 +16,12 @@ mongoose.connect(config.database);
 const db = mongoose.connection;
 
 // Check connection
-db.once('open', function(){
+db.once('open', function () {
   console.log('Connected to MongoDB');
 });
 
 // Check for db errors
-db.on('error', function(err){
+db.on('error', function (err) {
   console.error(err);
 });
 
@@ -54,18 +54,18 @@ app.use(function (req, res, next) {
 
 // Express Validator Middleware
 app.use(expressValidator({
-  errorFormatter: function(param, msg, value) {
-      var namespace = param.split('.')
-      , root    = namespace.shift()
+  errorFormatter: function (param, msg, value) {
+    var namespace = param.split('.')
+      , root = namespace.shift()
       , formParam = root;
 
-    while(namespace.length) {
+    while (namespace.length) {
       formParam += '[' + namespace.shift() + ']';
     }
     return {
-      param : formParam,
-      msg   : msg,
-      value : value
+      param: formParam,
+      msg: msg,
+      value: value
     };
   }
 }));
@@ -77,18 +77,18 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('*', function(req, res, next){
+app.get('*', function (req, res, next) {
   res.locals.user = req.user || null;
   next();
 });
 
 app.get('/', function (req, res) {
-  Article.find({}, function(err, articles){
-    if(err){
+  Article.find({}, function (err, articles) {
+    if (err) {
       console.error(err);
     } else {
       res.render('index', {
-        title: 'Articles', 
+        title: 'Articles' + (process.env.COMPOSE_PROJECT_NAME ? '( ENV: ' + process.env.COMPOSE_PROJECT_NAME + ' )' : ''),
         articles: articles
       });
     }
@@ -102,6 +102,6 @@ let users = require('./routes/users');
 app.use('/articles', articles);
 app.use('/users', users);
 
-app.listen(3000, function(){
+app.listen(3000, function () {
   console.log(`Server started on port 3000`);
 })
