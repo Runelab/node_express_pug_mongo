@@ -88,7 +88,7 @@ app.get('/', function (req, res) {
       console.error(err);
     } else {
       res.render('index', {
-        title: 'Articles' + (process.env.COMPOSE_PROJECT_NAME ? '( ENV: ' + process.env.COMPOSE_PROJECT_NAME + ' )' : ''),
+        title: 'Articles' + (process.env.COMPOSE_PROJECT_NAME ? ' ( ENV: ' + process.env.COMPOSE_PROJECT_NAME + ' )' : ''),
         articles: articles
       });
     }
